@@ -22,19 +22,19 @@ jobs:
           - os: linux
             runner: ubuntu-latest
             arch: x86_64
-          - os: linux
-            runner: ubuntu-latest
-            arch: i686
-          - os: linux
-            runner: ubuntu-latest
-            arch: aarch64
-
-          - os: windows
-            runner: windows-latest
-            arch: AMD64
-          - os: windows
-            runner: windows-latest
-            arch: x86
+          # - os: linux
+          #   runner: ubuntu-latest
+          #   arch: i686
+          # - os: linux
+          #   runner: ubuntu-latest
+          #   arch: aarch64
+          #
+          # - os: windows
+          #   runner: windows-latest
+          #   arch: AMD64
+          # - os: windows
+          #   runner: windows-latest
+          #   arch: x86
 
     steps:
       - uses: actions/checkout@v4
