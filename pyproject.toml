@@ -7,7 +7,7 @@ name = "pyquartic"
 version = "0.1.0"
 description = "Fast and highly accurate cubic and quartic equation solvers"
 authors = [{name = "mzivic7"}]
-license = "GPL-3.0-or-later"
+license = { text = "GPL-3.0-or-later" }
 readme = "README.md"
 requires-python = ">=3.7"
 dependencies = ["numpy"]
