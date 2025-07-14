@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Build wheels on ${{ matrix.os }} / ${{ matrix.arch }}
+    name: Build wheels for ${{ matrix.os }} / ${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     strategy:
       matrix:
@@ -61,7 +61,6 @@ jobs:
     name: Create GitHub Release
     needs: build
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/') && github.ref_name =~ '^[0-9]+\.[0-9]+\.[0-9]+$'
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -72,11 +71,12 @@ jobs:
           mkdir wheels
           find dist -name "*.whl" -exec cp {} wheels/ \;
 
-      - name: Create GitHub Release and Upload Wheels
-        uses: softprops/action-gh-release@v1
+      - name: Draft a release
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
+          name: '${{ github.ref_name }} [DRAFTED BY CI]'
+          tag_name: '${{ github.ref_name }}'
+          target_commitish: ${{ github.sha }}
           draft: true
           files: wheels/*.whl
-
+          generate_release_notes: true

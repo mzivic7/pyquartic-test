@@ -1,0 +1,24 @@
+name: Release to PyPi
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    name: Upload wheels to PyPI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release wheels
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: ${{ github.repository }}
+          tag: ${{ github.event.release.tag_name }}
+          fileName: "*.whl"
+          out-file-path: dist
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@v1.8.8
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          packages-dir: dist
