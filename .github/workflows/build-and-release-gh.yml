@@ -58,7 +58,7 @@ jobs:
           path: dist/*.whl
 
   release:
-    name: Create GitHub Release
+    name: Draft GitHub Release
     needs: build
     runs-on: ubuntu-latest
     steps:

@@ -44,7 +44,6 @@ include-package-data = true
 
 [tool.cibuildwheel]
 build = "*"
-skip = "pp*"
 
 [tool.cibuildwheel.linux]
 before-build = "pip install ."
@@ -54,4 +53,3 @@ before-build = "pip install ."
 
 [tool.cibuildwheel.windows]
 before-build = "pip install ."
-
