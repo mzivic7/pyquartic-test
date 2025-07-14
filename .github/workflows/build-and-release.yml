@@ -1,0 +1,82 @@
+name: Build and Release
+run-name: ${{ github.workflow }} for ${{ github.ref_name }}
+on:
+  push:
+    tags:
+      - '[0-9]*.[0-9]*.[0-9]*'
+
+jobs:
+  build:
+    name: Build wheels on ${{ matrix.os }} / ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          - os: macos
+            runner: macos-15
+            arch: x86_64
+          - os: macos
+            runner: macos-15
+            arch: arm64
+
+          - os: linux
+            runner: ubuntu-latest
+            arch: x86_64
+          - os: linux
+            runner: ubuntu-latest
+            arch: i686
+          - os: linux
+            runner: ubuntu-latest
+            arch: aarch64
+
+          - os: windows
+            runner: windows-latest
+            arch: AMD64
+          - os: windows
+            runner: windows-latest
+            arch: x86
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install cibuildwheel
+        run: python -m pip install cibuildwheel
+
+      - name: Build wheels
+        env:
+          CIBW_ARCHS: ${{ matrix.arch }}
+        run: python -m cibuildwheel --output-dir dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.os }}-${{ matrix.arch }}
+          path: dist/*.whl
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') && github.ref_name =~ '^[0-9]+\.[0-9]+\.[0-9]+$'
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+
+      - name: Flatten wheels
+        run: |
+          mkdir wheels
+          find dist -name "*.whl" -exec cp {} wheels/ \;
+
+      - name: Create GitHub Release and Upload Wheels
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: true
+          files: wheels/*.whl
+
