@@ -32,6 +32,13 @@ class CustomBuildExt(_build_ext):
         for so_file in glob.glob(os.path.join(self.build_lib, "pyquartic", "_dummy*.so")):
             os.remove(so_file)
 
+    def build_extensions(self):
+        self.extensions = [
+            ext for ext in self.extensions
+            if ext.name != "pyquartic._dummy"
+        ]
+        super().build_extensions()
+
 setup(
     name="pyquartic",
     packages=["pyquartic"],
