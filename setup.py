@@ -2,20 +2,20 @@ import glob
 import os
 import sys
 
-from setuptools import setup
-from setuptools.command.build_py import build_py as _build_py
+from setuptools import Extension, setup
+from setuptools.command.build_ext import build_ext as _build_ext
 from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, PROJECT_ROOT)
 
 
-class bdist_wheel(_bdist_wheel):
+class BdistWheel(_bdist_wheel):
     def finalize_options(self):
         super().finalize_options()
         self.root_is_pure = False
 
-class CustomBuildPy(_build_py):
+class CustomBuildExt(_build_ext):
     def run(self):
         import compile_numba
         compile_numba.build_numba_extensions()
@@ -29,11 +29,15 @@ class CustomBuildPy(_build_py):
 
         super().run()
 
+        for so_file in glob.glob(os.path.join(self.build_lib, "pyquartic", "_dummy*.so")):
+            os.remove(so_file)
+
 setup(
     name="pyquartic",
     packages=["pyquartic"],
+    ext_modules=[Extension("pyquartic._dummy", sources=[])],
     cmdclass={
-        "build_py": CustomBuildPy,
-        "bdist_wheel": bdist_wheel,
+        "build_ext": CustomBuildExt,
+        "bdist_wheel": BdistWheel,
     },
 )
