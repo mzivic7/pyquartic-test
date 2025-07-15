@@ -20,8 +20,11 @@ class CustomBuildPy(_build_py):
         import compile_numba
         compile_numba.build_numba_extensions()
 
+        build_lib_pyquartic = os.path.join(self.build_lib, "pyquartic")
+        os.makedirs(build_lib_pyquartic, exist_ok=True)
+
         for so_file in glob.glob("*.so") + glob.glob("*.pyd"):
-            target = os.path.join("pyquartic", os.path.basename(so_file))
+            target = os.path.join(build_lib_pyquartic, os.path.basename(so_file))
             os.rename(so_file, target)
 
         super().run()
@@ -32,5 +35,5 @@ setup(
     cmdclass={
         "build_py": CustomBuildPy,
         "bdist_wheel": bdist_wheel,
-        },
+    },
 )
