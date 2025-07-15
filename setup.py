@@ -3,12 +3,12 @@ import os
 import sys
 
 from setuptools import setup
-from setuptools.command.build_ext import build_ext as _build_ext
+from setuptools.command.build_py import build_py as _build_py
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, PROJECT_ROOT)
 
-class CustomBuildExt(_build_ext):
+class CustomBuildPy(_build_py):
     def run(self):
         import compile_numba
         compile_numba.build_numba_extensions()
@@ -22,5 +22,5 @@ class CustomBuildExt(_build_ext):
 setup(
     name="pyquartic",
     packages=["pyquartic"],
-    cmdclass={"build_ext": CustomBuildExt},
+    cmdclass={"build_py": CustomBuildPy},
 )
