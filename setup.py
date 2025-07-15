@@ -41,6 +41,7 @@ class CustomBuildExt(_build_ext):
 
 setup(
     name="pyquartic",
+    version="0.1.0",
     packages=["pyquartic"],
     ext_modules=[Extension("pyquartic._dummy", sources=[])],
     cmdclass={
