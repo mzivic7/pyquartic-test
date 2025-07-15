@@ -10,8 +10,8 @@ sys.path.insert(0, PROJECT_ROOT)
 
 class CustomBuildExt(_build_ext):
     def run(self):
-        import build
-        build.build_numba_extensions()
+        import compile_numba
+        compile_numba.build_numba_extensions()
 
         for so_file in glob.glob("*.so") + glob.glob("*.pyd"):
             target = os.path.join("pyquartic", os.path.basename(so_file))
