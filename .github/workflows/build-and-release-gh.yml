@@ -24,9 +24,6 @@ jobs:
             arch: x86_64
           - os: linux
             runner: ubuntu-latest
-            arch: i686
-          - os: linux
-            runner: ubuntu-latest
             arch: aarch64
           #
           # - os: windows
@@ -50,7 +47,7 @@ jobs:
       - name: Build wheels
         env:
           CIBW_ARCHS: ${{ matrix.arch }}
-          CIBW_SKIP: "musllinux*"
+          CIBW_SKIP: "*musllinux*"
         run: python -m cibuildwheel --output-dir dist
 
       - uses: actions/upload-artifact@v4
