@@ -43,12 +43,3 @@ include-package-data = true
 
 [tool.cibuildwheel]
 build = "*"
-
-[tool.cibuildwheel.linux]
-before-build = "pip install ."
-
-[tool.cibuildwheel.macos]
-before-build = "pip install ."
-
-[tool.cibuildwheel.windows]
-before-build = "pip install ."
