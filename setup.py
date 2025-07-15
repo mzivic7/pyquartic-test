@@ -3,7 +3,7 @@ import os
 import sys
 
 from setuptools import setup
-from setuptools.command.build_py import build_ext as _build_ext
+from setuptools.command.build_ext import build_ext as _build_ext
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 sys.path.insert(0, PROJECT_ROOT)
@@ -11,9 +11,7 @@ sys.path.insert(0, PROJECT_ROOT)
 class CustomBuildExt(_build_ext):
     def run(self):
         import build
-        print("Compiling with numba")
         build.build_numba_extensions()
-        print("Compiling finished")
 
         for so_file in glob.glob("*.so") + glob.glob("*.pyd"):
             target = os.path.join("pyquartic", os.path.basename(so_file))
