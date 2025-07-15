@@ -34,7 +34,7 @@ Where `a, b, c, d, e` are quartic equation coefficients:
 $`ax^4 + bx^3 + cx^2 + dx + e = 0`$
 
 ## Speed analysis
-Speed analysis can be performed by running [test_pyquartic.py](test_pyquartic.py).
+Speed analysis can be performed by running [test_pyquartic.py](test_pyquartic.py).  
 Note that test requires numpy, for comparison with numpy's solver.  
 Numpy's polyroots solver computes eigenvalues of a companion matrix, formed from n-th order polynomial coefficients. This method is stable and accurate, but very slow and is not supported by numba.
 Tests are performed on large number of coefficients (10000) where coefficients range from -10000 to 10000, times shown are mean and best times from those iterations.  
