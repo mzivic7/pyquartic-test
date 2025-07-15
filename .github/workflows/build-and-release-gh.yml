@@ -12,12 +12,12 @@ jobs:
     strategy:
       matrix:
         include:
-          # - os: macos
-          #   runner: macos-15
-          #   arch: arm64
-          # - os: macos
-          #   runner: macos-15
-          #   arch: x86_64
+          - os: macos
+            runner: macos-15
+            arch: arm64
+          - os: macos
+            runner: macos-15
+            arch: x86_64
           - os: linux
             runner: ubuntu-latest
             arch: x86_64
@@ -50,10 +50,16 @@ jobs:
           name: wheels-${{ matrix.os }}-${{ matrix.arch }}
           path: dist/*.whl
 
-  release:
+
+  draft-release:
     name: Draft GitHub Release
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      attestations: write
+      contents: write
+
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -63,6 +69,11 @@ jobs:
         run: |
           mkdir wheels
           find dist -name "*.whl" -exec cp {} wheels/ \;
+
+      - name: Generate release attestation
+        uses: actions/attest-build-provenance@v2.4.0
+        with:
+          subject-path: "wheels/*"
 
       - name: Draft a release
         uses: softprops/action-gh-release@v2
